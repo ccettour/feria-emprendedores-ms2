@@ -1,9 +1,12 @@
 package com.samarana.back_samarana.controllers;
 
+import com.samarana.back_samarana.dto.ErrorResponse;
 import com.samarana.back_samarana.entities.Reserva;
 import com.samarana.back_samarana.services.ReservaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +41,8 @@ public class ReservaController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Reserva guardada exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Error en los datos enviados")
+            @ApiResponse(responseCode = "400", description = "Error en los datos enviados",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/guardar")
     public ResponseEntity<?> guardar(@RequestBody Reserva reserva) {
@@ -56,7 +60,8 @@ public class ReservaController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Estado actualizado correctamente"),
-            @ApiResponse(responseCode = "400", description = "Reserva no encontrada o datos inválidos")
+            @ApiResponse(responseCode = "400", description = "Reserva no encontrada o datos inválidos",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PutMapping("/cambiar-estado/{id}")
     public ResponseEntity<?> cambiarEstado(
