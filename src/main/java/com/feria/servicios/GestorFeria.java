@@ -1,6 +1,7 @@
 package com.feria.servicios;
 
 import com.feria.modelos.*;
+import com.feria.utils.Validadores;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,67 +17,65 @@ public class GestorFeria {
         ventas = new ArrayList<>();
     }
 
-    public void registrarEmprendedorConProductos(String nombre, String id, String telefono, 
-                                                   String email, String categoria, 
-                                                   List<String> nombresProductos, 
-                                                   List<Double> precios, 
+    public void registrarEmprendedorConProductos(String nombre, String id, String telefono,
+                                                   String email, String categoria,
+                                                   List<String> nombresProductos,
+                                                   List<Double> precios,
                                                    List<Integer> stocks) {
-
-        Emprendedor e = new Emprendedor(nombre, id, telefono, email, categoria);
-
         if (nombre == null || nombre.length() < 2) {
             System.out.println("Error: nombre inválido");
             return;
         }
-        if (email == null || !email.contains("@")) {
+        if (!Validadores.emailValido(email)) {
             System.out.println("Error: email inválido");
             return;
         }
 
+        Emprendedor emprendedor = new Emprendedor(nombre, id, telefono, email, categoria);
+
         for (int i = 0; i < nombresProductos.size(); i++) {
-            Producto p = new Producto(nombresProductos.get(i), precios.get(i), stocks.get(i), categoria, id);
-            e.agregarProducto(p);
-            productos.add(p);
+            Producto producto = new Producto(nombresProductos.get(i), precios.get(i), stocks.get(i), categoria, id);
+            emprendedor.agregarProducto(producto);
+            productos.add(producto);
         }
 
-        emprendedores.add(e);
+        emprendedores.add(emprendedor);
         System.out.println("Emprendedor registrado con " + nombresProductos.size() + " productos");
     }
 
-    public void registrarVenta(String idVenta, String empId, String prodNombre, int cantidad, double precio, String fecha) {
-
-        Producto productoEncontrado = null;
-        for (Producto p : productos) {
-            if (p.nombre.equals(prodNombre) && p.emprendedorId.equals(empId)) {
-                productoEncontrado = p;
-                break;
-            }
-        }
+    public void registrarVenta(String idVenta, String empId, String nombreProducto, int cantidad, double precio, String fecha) {
+        Producto productoEncontrado = buscarProducto(nombreProducto, empId);
 
         if (productoEncontrado == null) {
             System.out.println("Producto no encontrado");
             return;
         }
-
         if (productoEncontrado.stock < cantidad) {
             System.out.println("Stock insuficiente");
             return;
         }
 
-        Venta v = new Venta(idVenta, empId, prodNombre, cantidad, precio, fecha);
-        ventas.add(v);
-
+        Venta venta = new Venta(idVenta, empId, nombreProducto, cantidad, precio, fecha);
+        ventas.add(venta);
         productoEncontrado.stock -= cantidad;
-
         System.out.println("Venta registrada. Nuevo stock: " + productoEncontrado.stock);
+    }
+
+    private Producto buscarProducto(String nombreProducto, String empId) {
+        for (Producto p : productos) {
+            if (p.nombre.equals(nombreProducto) && p.emprendedorId.equals(empId)) {
+                return p;
+            }
+        }
+        return null;
     }
 
     public List<Emprendedor> getEmprendedoresConStockBajo() {
         List<Emprendedor> resultado = new ArrayList<>();
-        for (Emprendedor e : emprendedores) {
-            for (Producto p : e.prods) {
-                if (p.hayStockBajo()) {
-                    resultado.add(e);
+        for (Emprendedor emprendedor : emprendedores) {
+            for (Producto producto : emprendedor.productos) {
+                if (producto.hayStockBajo()) {
+                    resultado.add(emprendedor);
                     break;
                 }
             }
@@ -86,12 +85,12 @@ public class GestorFeria {
 
     public void procesarVentasPendientesYCobrar() {
         double totalRecaudado = 0;
-        for (Venta v : ventas) {
-            if (!v.pagoRealizado) {
-                double monto = v.calcularTotalConDescuento();
+        for (Venta venta : ventas) {
+            if (!venta.pagoRealizado) {
+                double monto = venta.calcularTotalConDescuento();
                 totalRecaudado += monto;
-                v.pagoRealizado = true;
-                System.out.println("Cobrada venta " + v.idVenta + " por $" + monto);
+                venta.pagoRealizado = true;
+                System.out.println("Cobrada venta " + venta.idVenta + " por $" + monto);
             }
         }
         System.out.println("Total recaudado: $" + totalRecaudado);
