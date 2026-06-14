@@ -2,9 +2,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "semana-4-integration" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "semana-4-integration" ]
 
 jobs:
   build:
