@@ -6,22 +6,20 @@ public class Reportes {
 
     public String generarReportePorCategoria(GestorFeria gestor, String categoria) {
         String reporte = "=== REPORTE DE EMPRENDEDORES - CATEGORÍA: " + categoria + " ===\n";
-
-        for (Emprendedor e : gestor.emprendedores) {
-            if (e.cat.equals(categoria)) {
-                reporte += e.mostrarInfoYValidar();
+        for (Emprendedor emprendedor : gestor.emprendedores) {
+            if (emprendedor.categoria.equals(categoria)) {
+                reporte += emprendedor.mostrarInfo();
                 reporte += "---\n";
             }
         }
-
         return reporte;
     }
 
-    public String generarReportePorCategoriaAlternativo(GestorFeria gestor, String cat) {
-        String resultado = "REPORTE CATEGORIA " + cat + "\n";
-        for (Emprendedor e : gestor.emprendedores) {
-            if (e.cat.equals(cat)) {
-                resultado += e.getNombre() + "\n";
+    public String generarReportePorCategoriaResumido(GestorFeria gestor, String categoria) {
+        String resultado = "REPORTE CATEGORÍA " + categoria + "\n";
+        for (Emprendedor emprendedor : gestor.emprendedores) {
+            if (emprendedor.categoria.equals(categoria)) {
+                resultado += emprendedor.getNombre() + "\n";
             }
         }
         return resultado;
@@ -29,8 +27,8 @@ public class Reportes {
 
     public double calcularVentasTotales(GestorFeria gestor) {
         double total = 0;
-        for (Venta v : gestor.ventas) {
-            total += v.calcularTotalConDescuento();
+        for (Venta venta : gestor.ventas) {
+            total += venta.calcularTotalConDescuento();
         }
         return total;
     }
@@ -40,23 +38,21 @@ public class Reportes {
         System.out.println("Total emprendedores: " + gestor.emprendedores.size());
         System.out.println("Total productos: " + gestor.productos.size());
         System.out.println("Total ventas: " + gestor.ventas.size());
+        System.out.println("Total facturado: $" + calcularVentasTotales(gestor));
+        System.out.println("Emprendedores con stock bajo: " + contarEmprendedoresConStockBajo(gestor));
+        System.out.println("=======================================");
+    }
 
-        double totalVentas = 0;
-        for (Venta v : gestor.ventas) {
-            totalVentas += v.calcularTotalConDescuento();
-        }
-        System.out.println("Total facturado: $" + totalVentas);
-
-        int emprendedoresStockBajo = 0;
-        for (Emprendedor e : gestor.emprendedores) {
-            for (Producto p : e.prods) {
-                if (p.stock < 5) {
-                    emprendedoresStockBajo++;
+    private int contarEmprendedoresConStockBajo(GestorFeria gestor) {
+        int contador = 0;
+        for (Emprendedor emprendedor : gestor.emprendedores) {
+            for (Producto producto : emprendedor.productos) {
+                if (producto.stock < 5) {
+                    contador++;
                     break;
                 }
             }
         }
-        System.out.println("Emprendedores con stock bajo: " + emprendedoresStockBajo);
-        System.out.println("=======================================");
+        return contador;
     }
 }

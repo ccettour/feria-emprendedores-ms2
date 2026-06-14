@@ -1,23 +1,30 @@
-name: Java CI with Maven
+name: Feria Emprendedores CI
 
 on:
   push:
-    branches: [ "semana-4-integration" ]
+    branches:
+      - main
+      - master
+
   pull_request:
-    branches: [ "semana-4-integration" ]
+    branches:
+      - main
+      - master
 
 jobs:
-  build:
+  test:
+
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-        
-    - name: Build and Test with Maven
-      run: mvn -B test
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Ejecutar tests
+        run: mvn test

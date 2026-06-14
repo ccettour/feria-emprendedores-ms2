@@ -38,6 +38,6 @@ public class Main {
 
         System.out.println("Emprendedor Ana válido? " + Validadores.validarEmprendedorCompleto(gestor.emprendedores.get(0)));
 
-        System.out.println(gestor.emprendedores.get(0).mostrarInfoYValidar());
+        System.out.println(gestor.emprendedores.get(0).mostrarInfo());
     }
 }
