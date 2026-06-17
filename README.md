@@ -18,4 +18,11 @@ mvn test jacoco:report
 ### Reporte en: target/site/jacoco/index.html
 
 ## Decisiones técnicas
-Se renombraron variables crípticas y se separaron métodos con múltiples responsabilidades, aplicando SRP y DIP (Semana 1). Se implementó el patrón Factory Method mediante EmprendedorFactory para centralizar la construcción y validación de Emprendedor, respetando OCP (Semana 2). Los tests unitarios se escribieron con JUnit 5 y Mockito; la funcionalidad obtenerEstadoStock() fue desarrollada con TDD siguiendo ciclos rojo-verde-refactor (Semana 3). El pipeline de CI con GitHub Actions ejecuta mvn test automáticamente en cada push a main (Semana 4).
+### Semana 1
+Se renombraron variables crípticas y se separaron métodos con múltiples responsabilidades, aplicando SRP y DIP. 
+### Semana 2
+Se implementó el patrón Factory Method mediante EmprendedorFactory para centralizar la construcción y validación de Emprendedor, respetando OCP. 
+### Semana 3
+Los tests unitarios se escribieron con JUnit 5 y Mockito; la funcionalidad obtenerEstadoStock() fue desarrollada con TDD siguiendo ciclos rojo-verde-refactor. 
+### Semana 4
+El pipeline de CI con GitHub Actions ejecuta mvn test automáticamente en cada push a main.
